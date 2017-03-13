@@ -1,0 +1,48 @@
+---
+title: "Developing Data Products Week-4 Project"
+author: "Eswara S"
+date: "March 13, 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Project Detail
+
+
+As part of the Coursera Data Projects course project, there was a requirement to create a Shiny web application and then present a pitch presentation.
+
+The purpose is to write a structured presentation. I will do that by taking you through my Shiny app and why I did, what I did.
+
+## Plot Hodgepodge
+
+I gave a try to make Hodgepodge by taking inputs from user
+
+
+Plot a Hodgepodge by inputting,
+
+1. Sequence length 
+
+2. Knot length
+
+## Slide with server.R code
+
+```{r, echo = TRUE}
+MyPlot <- function(n)
+{
+   x <- seq(0,4*pi, length = 100); y <- sin(x) + rnorm( n, sd=0.3)
+   knots <- seq(0, 8*pi, length = 100)
+   splineTerms <- sapply(knots, function(knot)(x > knot) * (x - knot))
+   xMat <- cbind(1,x,splineTerms)
+   yhat <- predict(lm(y ~ xMat - 1))
+   plot(x, y, frame = FALSE, pch = 21, bg = "blue", cex = 2)
+   lines(x, yhat, col = "red", lwd = 2)
+}
+```
+
+## Slide with Plot
+```{r, echo=TRUE}
+MyPlot(100)
+```
