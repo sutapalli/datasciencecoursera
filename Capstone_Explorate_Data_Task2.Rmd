@@ -1,0 +1,115 @@
+---
+title: "Capstone-Explorate Data"
+author: "Eswara S"
+date: "March 20, 2017"
+output: html_document
+---
+
+# Abstract
+I have analyzed US English text provided in Coursera-SwiftKey.zip. I found that the blogs and news data files are same, the twitter data feed is different.
+
+# Introduction
+In this report, lets look at three data feeds of US English text : a bunch of internet blogs, a bunch of internet news and a bunch of tweats
+
+Do some analysis on thier characteristics like : Feed size, Nb of lines, Nb of words, number of characters, number of non-white characters, Distribution of words
+
+# For our analysis, data feed is available  [here](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip).
+
+```{r}
+# I have already downloaded the feed to my computer. You may download using below steps
+ Dest_Zip_file <- "C:/Users/U587019/Desktop/Capstone/Coursera-SwiftKey.zip"
+# Source_file <- "http://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
+# download.file(Source_file, Dest_Zip_file)
+# extract the files from the zip file
+#unzip(destination_file)
+```
+
+# Inspect the unzipped files
+
+```{r}
+# I have unzipped files already. You may do so using below command
+# unzip(Dest_Zip_file, list = TRUE )
+
+# inspect the data
+list.files("C:/Users/U587019/Desktop/Capstone/final")
+list.files("C:/Users/U587019/Desktop/Capstone/final/en_US")
+```
+
+#Now load these files
+
+```{r}
+# import the blogs and twitter datasets in text mode
+blogs <- readLines("final/en_US/en_US.blogs.txt", encoding="UTF-8")
+twitter <- suppressWarnings(readLines("final/en_US/en_US.twitter.txt", encoding="UTF-8"))
+
+# import the news dataset in binary mode
+con <- file("final/en_US/en_US.news.txt", open="rb")
+news <- readLines(con, encoding="UTF-8")
+close(con)
+rm(con)
+```
+
+# Basic Statistics
+
+First step, would be to calculate size for each feed in Megabytes
+
+```{r}
+# file size (in MegaBytes)
+file.info("final/en_US/en_US.blogs.txt")$size   / 1024^2
+file.info("final/en_US/en_US.news.txt")$size    / 1024^2
+file.info("final/en_US/en_US.twitter.txt")$size / 1024^2
+```
+
+# Required packages for further analysis
+
+```{r}
+# Load below two packages for further analysis purpose
+suppressWarnings(library(stringi))
+suppressWarnings(library(ggplot2))
+```
+
+# Now lets start counting lines and words in each feed
+
+```{r}
+stri_stats_general( twitter )
+stri_stats_general( blogs )
+stri_stats_general( news )
+```
+
+# Lets start with "twitter" data feed
+
+```{r}
+words_twitter <- stri_count_words(twitter)
+summary(words_twitter )
+suppressWarnings(qplot(words_twitter ))
+```
+
+# Next take "blogs" data feed
+
+```{r}
+words_blogs <- stri_count_words(blogs)
+summary(words_blogs)
+suppressWarnings(qplot(words_blogs))
+```
+
+# Now its time for "news" data feed
+
+```{r}
+words_news <- stri_count_words(news)
+summary(words_news )
+suppressWarnings(qplot(words_news ))
+```
+
+
+# Conclusions
+
+I have explorated US english data feed. File sizes are around 200 MegaBytes (MBs) per file.
+
+blogs feed consists of 899288 lines and 206824382 characters
+news feed consists of 1010242 lines and 203223154 characters
+twitter feed consists of 2360148 lines and 162096031 characters
+
+
+Number of characters in each feed looks very similar appx. 200 million each
+
+Also "blogs" & "news" both have similar distribution whereas twitter has different distribution
